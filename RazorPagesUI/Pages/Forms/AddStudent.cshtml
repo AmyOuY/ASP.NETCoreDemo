@@ -1,0 +1,31 @@
+﻿@page
+@model RazorPagesUI.Pages.Forms.AddStudentModel
+
+@{
+    ViewData["Title"] = "Add Student";
+}
+
+
+<div class="text-center">
+    <h1>Add Student</h1>
+    <div style="width:40%; margin:50px auto;">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-left text-danger"></div>
+            <div class="form-group">
+                <input type="number" class="form-control" asp-for="Student.StudentId" placeholder="Student Id" />
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" asp-for="Student.FirstName" placeholder="First Name" />
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" asp-for="Student.LastName" placeholder="Last Name" />
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" asp-for="Student.Email" placeholder="Email" />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

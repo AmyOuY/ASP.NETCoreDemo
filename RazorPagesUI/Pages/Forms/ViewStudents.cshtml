@@ -1,0 +1,35 @@
+﻿@page
+@model RazorPagesUI.Pages.Forms.ViewStudentsModel
+@{
+    ViewData["Title"] = "View Students";
+}
+
+<h1 class="text-center">All Students</h1>
+@if (@Model.Students is null)
+    {
+        <p><em>Page is Loading...</em></p>
+    }
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Student Id</td>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Email</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model.Students)
+            {
+                <tr>
+                    <td>@student.StudentId</td>
+                    <td>@student.FirstName</td>
+                    <td>@student.LastName</td>
+                    <td>@student.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
