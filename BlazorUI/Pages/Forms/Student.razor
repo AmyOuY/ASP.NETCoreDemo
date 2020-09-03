@@ -1,0 +1,82 @@
+﻿@page "/Forms/Students"
+@using DataAccessLibrary.DataAccess
+@using DataAccessLibrary.Models
+@using BlazorUI.Models
+
+@inject IStudentData _db 
+
+<h1>Student Page</h1>
+
+<h4>Insert New Student</h4>
+<EditForm Model="@newStudent" OnValidSubmit="@InsertStudent">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputNumber id="studentId" @bind-Value="newStudent.StudentId" />
+    <InputText id="firstName" @bind-Value="newStudent.FirstName" />
+    <InputText id="lastName" @bind-Value="newStudent.LastName" />
+    <InputText id="email" @bind-Value="newStudent.Email" />
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+
+<h4>Current Students</h4>
+@if (students is null)
+{
+    <p><em>Page is loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Student Id</td>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Email</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in students)
+            {
+                <tr>
+                    <td>@student.StudentId</td>
+                    <td>@student.FirstName</td>
+                    <td>@student.LastName</td>
+                    <td>@student.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    private List<StudentModel> students;
+    private StudentDisplayModel newStudent = new StudentDisplayModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await _db.GetStudents();
+    }
+
+
+    private async Task InsertStudent()
+    {
+        StudentModel student = new StudentModel
+        {
+            StudentId = newStudent.StudentId,
+            FirstName = newStudent.FirstName,
+            LastName = newStudent.LastName,
+            Email = newStudent.Email
+        };
+
+        await _db.InsertStudent(student);
+
+        students.Add(student);
+
+        newStudent = new StudentDisplayModel();
+    }
+}
