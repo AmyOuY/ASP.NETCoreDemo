@@ -31,10 +31,10 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
-                <td>Student Id</td>
-                <td>First Name</td>
-                <td>Last Name</td>
-                <td>Email</td>
+                <th>Student Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
             </tr>
         </thead>
         <tbody>
@@ -65,7 +65,7 @@ else
 
     private async Task InsertStudent()
     {
-        StudentModel student = new StudentModel
+        StudentModel s = new StudentModel
         {
             StudentId = newStudent.StudentId,
             FirstName = newStudent.FirstName,
@@ -73,9 +73,9 @@ else
             Email = newStudent.Email
         };
 
-        await _db.InsertStudent(student);
+        await _db.InsertStudent(s);
 
-        students.Add(student);
+        students.Add(s);
 
         newStudent = new StudentDisplayModel();
     }
