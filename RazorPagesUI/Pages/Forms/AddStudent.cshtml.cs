@@ -42,7 +42,7 @@ namespace RazorPagesUI.Pages.Forms
 
             Student = new StudentDisplayModel();
 
-            return RedirectToPage("./ViewStudents");
+            return RedirectToPage("/Index");
         }
     }
 }
