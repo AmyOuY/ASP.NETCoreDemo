@@ -39,6 +39,11 @@ namespace MVCCoreUI
 
             services.AddTransient<ISqlDataAccess, SqlDataAccess>();
             services.AddTransient<IStudentData, StudentData>();
+
+            services.AddStackExchangeRedisCache(options => {
+                options.Configuration = Configuration.GetConnectionString("Redis");
+                options.InstanceName = "MVCCoreUI_";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

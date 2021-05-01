@@ -42,7 +42,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-           
+            <td>
+                @Html.ActionLink("Details", "ViewStudentById", new { studentId = item.StudentId })
+            </td>
         </tr>
 }
     </tbody>

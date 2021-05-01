@@ -1,6 +1,7 @@
 ﻿using DataAccessLibrary.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,20 +17,32 @@ namespace DataAccessLibrary.DataAccess
         }
 
 
-        public Task<List<StudentModel>> GetStudents()
+        public async Task<List<StudentModel>> GetStudents()
         {
             string sql = @"select * from dbo.Student";
 
-            return _db.LoadData<StudentModel, dynamic>(sql, new { });
+            var results = await _db.LoadData<StudentModel, dynamic>(sql, new { });
+
+            return results;
         }
 
 
-        public Task InsertStudent(StudentModel student)
+        public async Task InsertStudent(StudentModel student)
         {
             string sql = @"insert into dbo.Student (StudentId, FirstName, LastName, Email)
                             values (@StudentId, @FirstName, @LastName, @Email);";
 
-            return _db.SaveData<StudentModel>(sql, student);
+            await _db.SaveData(sql, student);
+        }
+
+
+        public async Task<StudentModel> GetStudentById(int studentId)
+        {
+            string sql = @"select * from dbo.Student where StudentId = @studentId";
+
+            var results = await _db.LoadData<StudentModel, dynamic>(sql, new { studentId });
+
+            return results.FirstOrDefault();
         }
     }
 }
