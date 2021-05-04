@@ -1,0 +1,87 @@
+﻿@page "/Students/Edit/{studentId}"
+@using DataAccessLibrary.DataAccess
+@using DataAccessLibrary.Models
+@using BlazorServerApp.Data
+
+@inject IStudentData _db
+@inject NavigationManager NavigationManager
+
+<h3 class="mb-3 ml-5">Edit Student</h3>
+<hr />
+
+<div class="container ml-5">
+    <div class="row">
+        <EditForm Model="@updatedStudent" OnValidSubmit="@UpdateStudent">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label class="h5" for="studentId">Student Id:</label>
+                <InputNumber id="studentId" class="form-control" @bind-Value="updatedStudent.StudentId" />
+                <span asp-validation-for="StudentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="h5" for="firstName">First Name:</label>
+                <InputText id="firstName" class="form-control" @bind-Value="updatedStudent.FirstName" />
+                <span asp-validation-for="firstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="h5" for="lastName">Last Name:</label>
+                <InputText id="lastName" class="form-control" @bind-Value="updatedStudent.LastName" />
+                <span asp-validation-for="lastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="h5" for="email">Email:</label>
+                <InputText id="email" class="form-control" @bind-Value="updatedStudent.Email" />
+                <span asp-validation-for="email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Edit" class="btn btn-primary" />
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    [Parameter]
+    public string StudentId { get; set; }
+
+    private StudentDisplayModel updatedStudent = new StudentDisplayModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        int id = int.Parse(StudentId);
+        StudentModel student = await _db.GetStudentById(id);
+
+        updatedStudent = new StudentDisplayModel
+        {
+            Id = student.Id,
+            StudentId = student.StudentId,
+            FirstName = student.FirstName,
+            LastName = student.LastName,
+            Email = student.Email
+        };
+    }
+
+
+    private async Task UpdateStudent()
+    {
+
+        StudentModel student = new StudentModel
+        {
+            Id = updatedStudent.Id,
+            StudentId = updatedStudent.StudentId,
+            FirstName = updatedStudent.FirstName,
+            LastName = updatedStudent.LastName,
+            Email = updatedStudent.Email
+        };
+
+
+        await _db.UpdateStudent(student);
+
+        NavigationManager.NavigateTo("/Students/AllStudents");
+    }
+}

@@ -44,5 +44,20 @@ namespace DataAccessLibrary.DataAccess
 
             return results.FirstOrDefault();
         }
+
+
+        public async Task UpdateStudent(StudentModel student)
+        {
+            string sql = @"update dbo.Student set StudentId = @StudentId, FirstName = @FirstName, LastName = @LastName, Email = @Email where Id = @Id";
+            await _db.SaveData(sql, student);
+        }
+
+
+        public async Task DeleteStudent(int studentId)
+        {
+            string sql = @"delete from dbo.Student where StudentId = @studentId";
+
+            await _db.DeleteData(sql, new { studentId });
+        }
     }
 }

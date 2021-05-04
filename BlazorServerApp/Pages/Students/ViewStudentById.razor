@@ -1,0 +1,94 @@
+﻿@page  "/Students/Details"
+@page "/Students/Details/{studentId}"
+@using DataAccessLibrary.DataAccess
+@using DataAccessLibrary.Models
+@using BlazorServerApp.Data
+@using DataAccessLibrary.Extensions
+@using Microsoft.Extensions.Caching.Distributed
+
+@inject IStudentData _db
+@inject IDistributedCache _cache
+
+
+<h4>View Student by Id</h4>
+<hr />
+
+@if (displayStudent is null)
+{
+    <p><em>Student info doesn't exist</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@displayStudent.StudentId</td>
+                <td>@displayStudent.FirstName</td>
+                <td>@displayStudent.LastName</td>
+                <td>@displayStudent.Email</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <a href="/Students/AllStudents">
+            Back To Student List
+        </a>
+    </div>
+
+    <div class="row mt-lg-5"></div>
+    <div class="h4 @isCacheData">@loadLocation</div>
+}
+
+
+@code {
+
+    [Parameter]
+    public string StudentId { get; set; }
+
+    private StudentModel student = null;
+    private StudentDisplayModel displayStudent;
+    private string loadLocation = null;
+    private string isCacheData = null;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //student = await _cache.GetEntryAsync<StudentModel>(StudentId.ToString());
+
+        //if (student is null)
+        //{
+        //    student = await _db.GetStudentById(int.Parse(StudentId));
+        //    loadLocation = "Data loaded from SQL database";
+        //    isCacheData = "text-success";
+        //    await _cache.SetEntryAsync(StudentId.ToString(), student);
+        //}
+        //else
+        //{
+        //    loadLocation = "Data loaded form Redis Cache";
+        //    isCacheData = "text-danger";
+        //}
+
+        StudentId = StudentId ?? "111111";
+        int id = int.Parse(StudentId);
+        student = await _db.GetStudentById(id);
+        loadLocation = "Data loaded from SQL database";
+        isCacheData = "text-success";
+
+        displayStudent = new StudentDisplayModel
+        {
+            StudentId = student.StudentId,
+            FirstName = student.FirstName,
+            LastName = student.LastName,
+            Email = student.Email
+        };
+    }
+}

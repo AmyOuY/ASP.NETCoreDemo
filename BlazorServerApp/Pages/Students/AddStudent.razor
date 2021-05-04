@@ -1,0 +1,64 @@
+﻿@page "/Students/AddStudent"
+@using DataAccessLibrary.DataAccess
+@using DataAccessLibrary.Models
+@using BlazorServerApp.Data
+
+@inject IStudentData _db
+@inject NavigationManager NavigationManager
+
+<h3 class="mb-3 ml-5">Insert New Student</h3>
+<hr />
+
+<div class="container ml-5">
+    <div class="row">
+        <EditForm Model="@newStudent" OnValidSubmit="@InsertStudent">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label class="h5" for="studentId">Student Id:</label>
+                <InputNumber id="studentId" class="form-control" @bind-Value="newStudent.StudentId" />
+                <span asp-validation-for="StudentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="h5" for="firstName">First Name:</label>
+                <InputText id="firstName" class="form-control" @bind-Value="newStudent.FirstName" />
+                <span asp-validation-for="firstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="h5" for="lastName">Last Name:</label>
+                <InputText id="lastName" class="form-control" @bind-Value="newStudent.LastName" />
+                <span asp-validation-for="lastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="h5" for="email">Email:</label>
+                <InputText id="email" class="form-control" @bind-Value="newStudent.Email" />
+                <span asp-validation-for="email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+
+
+
+@code {
+    private StudentDisplayModel newStudent = new StudentDisplayModel();
+
+    private async Task InsertStudent()
+    {
+        StudentModel s = new StudentModel
+        {
+            StudentId = newStudent.StudentId,
+            FirstName = newStudent.FirstName,
+            LastName = newStudent.LastName,
+            Email = newStudent.Email
+        };
+
+        await _db.InsertStudent(s);
+
+        NavigationManager.NavigateTo("/Students/AllStudents");
+    }
+}

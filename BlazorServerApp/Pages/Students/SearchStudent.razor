@@ -1,0 +1,30 @@
+﻿@page "/Students/SearchStudent"
+@inject NavigationManager NavigationManager
+
+<h3>Search Student by Id</h3>
+<hr />
+ <div class="mt-5">
+     <EditForm Model="@studentId" OnValidSubmit="@RedirectToDetail">
+         <DataAnnotationsValidator />
+         <ValidationSummary />
+         <p>
+             <label class="h5">Student Id: 
+                <InputNumber id="studentId" @bind-Value="studentId" />
+             </label>
+         </p>
+         <button type="submit" class="btn btn-primary">Submit</button>
+     </EditForm>
+ </div>
+
+
+
+@code {
+
+    private int studentId;
+
+    private void RedirectToDetail()
+    {
+        string link = "/Students/Details/" + studentId.ToString();
+        NavigationManager.NavigateTo(link);
+    }
+}

@@ -9,5 +9,7 @@ namespace DataAccessLibrary.DataAccess
         Task<List<StudentModel>> GetStudents();
         Task InsertStudent(StudentModel student);
         Task<StudentModel> GetStudentById(int studentId);
+        Task UpdateStudent(StudentModel student);
+        Task DeleteStudent(int studentId);
     }
 }
