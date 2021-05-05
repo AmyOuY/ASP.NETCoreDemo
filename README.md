@@ -19,7 +19,7 @@
 
 <hr/>
 <h4>Data primarily retrieved from Redis cache if it is there<h4/>
-<img src="/Images/blazor_sql.png" >
+<img src="/Images/blazor_redis.png" >
   
   
 <hr/>
@@ -34,4 +34,4 @@
 
 <hr/>
 <h4>Data primarily retrieved from Redis cache if it is there<h4/>
-<img src="/Images/mvc_sql.png" >
+<img src="/Images/mvc_redis.png" >
