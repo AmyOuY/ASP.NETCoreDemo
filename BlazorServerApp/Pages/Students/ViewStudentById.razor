@@ -8,6 +8,7 @@
 
 @inject IStudentData _db
 @inject IDistributedCache _cache
+@inject NavigationManager NavigationManager
 
 
 <h4>View Student by Id</h4>
@@ -62,26 +63,28 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //student = await _cache.GetEntryAsync<StudentModel>(StudentId.ToString());
+        student = await _cache.GetEntryAsync<StudentModel>(StudentId.ToString());
 
-        //if (student is null)
-        //{
-        //    student = await _db.GetStudentById(int.Parse(StudentId));
-        //    loadLocation = "Data loaded from SQL database";
-        //    isCacheData = "text-success";
-        //    await _cache.SetEntryAsync(StudentId.ToString(), student);
-        //}
-        //else
-        //{
-        //    loadLocation = "Data loaded form Redis Cache";
-        //    isCacheData = "text-danger";
-        //}
+        if (student is null)
+        {
+            int id = int.Parse(StudentId);
 
-        StudentId = StudentId ?? "111111";
-        int id = int.Parse(StudentId);
-        student = await _db.GetStudentById(id);
-        loadLocation = "Data loaded from SQL database";
-        isCacheData = "text-success";
+            if (await _db.IsValidStudentId(id) == false)
+            {
+                NavigationManager.NavigateTo("/Students/Alert");
+                return;
+            }
+
+            student = await _db.GetStudentById(id);
+            loadLocation = "Data loaded from SQL database";
+            isCacheData = "text-success";
+            await _cache.SetEntryAsync(StudentId.ToString(), student);
+        }
+        else
+        {
+            loadLocation = "Data loaded form Redis Cache";
+            isCacheData = "text-danger";
+        }
 
         displayStudent = new StudentDisplayModel
         {
