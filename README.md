@@ -1,5 +1,5 @@
 # ASP.NET Core3.1 Blazor and MVC apps with Redis cache
-<h3> Use <em>Student Model</em> to demonstrate how to Create, Read, Update, Delete (CRUD) in ASP.NET Core Blazor and MVC. </h3> 
+<h3> Use <em>Student Model</em> to demonstrate how to Create, Read, Update, and Delete (CRUD) in ASP.NET Core Blazor and MVC. </h3> 
 <h3> The apps use Dapper as an object–relational mapping (ORM) to access SQL database and Redis running inside Docker Container for caching. </h3>
 
 <hr/>
