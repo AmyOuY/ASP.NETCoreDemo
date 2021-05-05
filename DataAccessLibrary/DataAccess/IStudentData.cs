@@ -11,5 +11,6 @@ namespace DataAccessLibrary.DataAccess
         Task<StudentModel> GetStudentById(int studentId);
         Task UpdateStudent(StudentModel student);
         Task DeleteStudent(int studentId);
+        Task<bool> IsValidStudentId(int studentId);
     }
 }

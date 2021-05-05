@@ -59,5 +59,13 @@ namespace DataAccessLibrary.DataAccess
 
             await _db.DeleteData(sql, new { studentId });
         }
+
+        public async Task<bool> IsValidStudentId(int studentId)
+        {
+            List<StudentModel> students = await GetStudents();
+            HashSet<int> allIDs = new HashSet<int>(students.Select(x => x.StudentId).ToList());
+
+            return allIDs.Contains(studentId);
+        }
     }
 }

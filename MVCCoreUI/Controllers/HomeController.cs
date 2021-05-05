@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DataAccessLibrary.DataAccess;
 using DataAccessLibrary.Extensions;
 using DataAccessLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using MVCCoreUI.Models;
@@ -62,7 +64,7 @@ namespace MVCCoreUI.Controllers
 
                 _db.InsertStudent(newStudent);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("ViewStudents");
             }
             return View();
         }
@@ -90,7 +92,7 @@ namespace MVCCoreUI.Controllers
 
 
         public async Task<IActionResult> ViewStudentById(int studentId)
-        {
+        {           
             StudentModel student = null;
             string loadLocation = null;
             string isCacheData = null;
@@ -99,6 +101,11 @@ namespace MVCCoreUI.Controllers
 
             if (student is null)
             {
+                if (await _db.IsValidStudentId(studentId) == false)
+                {
+                    return RedirectToAction("Alert");
+                }
+
                 student = await _db.GetStudentById(studentId);
                 loadLocation = "Data loaded from SQL database";
                 isCacheData = "text-success";
@@ -126,6 +133,58 @@ namespace MVCCoreUI.Controllers
 
 
         public IActionResult SearchStudent()
+        {
+            return View();
+        }
+
+
+        public async Task<IActionResult> EditStudent(int studentId)
+        {
+            StudentModel student = await _db.GetStudentById(studentId);
+            StudentDisplayModel display = new StudentDisplayModel { 
+                Id = student.Id,
+                StudentId = student.StudentId,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Email = student.Email
+            };
+
+            return View(display);
+        }
+
+
+        public async Task<IActionResult> UpdateStudent(StudentDisplayModel student)
+        {
+            if (ModelState.IsValid)
+            {
+                StudentModel updatedStudent = new StudentModel
+                {
+                    Id = student.Id,
+                    StudentId = student.StudentId,
+                    FirstName = student.FirstName,
+                    LastName = student.LastName,
+                    Email = student.Email
+                };
+
+                await _db.UpdateStudent(updatedStudent);
+
+                return RedirectToAction("ViewStudents");
+            }
+
+            return View();
+        }
+
+
+        public async Task<IActionResult> DeleteStudent(int studentId)
+        {
+            await _db.DeleteStudent(studentId);
+
+            return RedirectToAction("ViewStudents");
+        }
+
+
+        // Show Alert message
+        public IActionResult Alert()
         {
             return View();
         }
